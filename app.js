@@ -28,6 +28,21 @@ app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api/] })
 const userRouter = require('./router/user')
 const Joi = require('@hapi/joi')
 app.use('/api', userRouter)
+//导入用户路由模块
+const userinfoRouter = require('./router/userinfo')
+app.use('/my', userinfoRouter)
+
+//导入文章分类路由模块
+const artCatesRouter = require('./router/artcate')
+app.use('/my/acticle', artCatesRouter)
+
+// 导入并使用文章路由模块
+const articleRouter = require('./router/article')
+// 为文章的路由挂载统一的访问前缀 /my/article
+app.use('/my/article', articleRouter)
+
+// 托管静态资源文件
+app.use('/uploads', express.static('./uploads'))
 
 app.use((err, req, res, next) => {
     if (err instanceof Joi.ValidationError) return res.cc(err)
